@@ -1,0 +1,9 @@
+{
+  "name": "hello-zig-wasm-1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mass10/hello-zig-wasm-1.git",
+  "author": "Irisawa Masaru <irisawa.masaru@gmail.com>",
+  "license": "MIT",
+  "dependencies": {}
+}
