@@ -1,20 +1,28 @@
-// const std = @import("std");
+//!
+//!
+//! Zig による WebAssembly の簡単なサンプルです。
+//!
+//! * 単純な関数をエクスポートしています。
+//!
+//! https://note.com/shift_tech/n/n58cbf573baef
+//!
 
-// pub fn main() anyerror!void {
-//     // Note that info level log messages are by default printed only in Debug
-//     // and ReleaseSafe build modes.
-//     std.log.info("All your codebase are belong to us.", .{});
-// }
-
-// test "basic test" {
-//     try std.testing.expectEqual(10, 3 + 7);
-// }
-
-
-// src/main.zig
 const std = @import("std");
 
+/// Zig のエントリーポイントです。
+///
+/// WebAssembly を出力する場合、意味はありません。(消しても OK)
 pub fn main() anyerror!void {
     const stdout = std.io.getStdOut().writer();
     try stdout.print("Hello, World!\n", .{});
+}
+
+/// 何らかの整数を返します。
+export fn test1() usize {
+    return 1;
+}
+
+/// `left` と `right` を足した数を返します。
+export fn test2(left: usize, right: usize) usize {
+    return left + right;
 }
