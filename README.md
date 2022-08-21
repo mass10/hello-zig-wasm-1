@@ -20,6 +20,10 @@ zig init-exe
 
 ```CMD
 zig build-exe -O ReleaseSmall -target wasm32-wasi src/main.zig
+```
 
+# wasm を単独で実行してみる
+
+```CMD
 wasmer.exe main.wasm
 ```
