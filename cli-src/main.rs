@@ -3,7 +3,7 @@ fn mkdir(path: &str) -> Result<(), Box<dyn std::error::Error>> {
 	if pt.is_dir() {
 		return Ok(());
 	}
-	println!("MKDIR> [{}]", path);
+	println!("[INFO] MKDIR> [{}]", path);
 	std::fs::create_dir(path)?;
 	return Ok(());
 }
@@ -13,7 +13,7 @@ fn execute_command(command: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
 	let status = std::process::Command::new(program).args(args).spawn()?.wait()?;
 	if !status.success() {
 		let code = status.code().unwrap();
-		println!("ERROR: コマンドは {} で終了しました。", code);
+		println!("[ERROR] コマンドは {} で終了しました。", code);
 		panic!();
 	}
 	return Ok(());
@@ -28,7 +28,7 @@ fn execute_command(command: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
 /// wasmer main.wasm
 /// ```
 fn make_exe() -> Result<(), Box<dyn std::error::Error>> {
-	println!("build...");
+	println!("[INFO] build...");
 
 	execute_command(&[
 		"zig",
@@ -40,13 +40,16 @@ fn make_exe() -> Result<(), Box<dyn std::error::Error>> {
 		"src/main.zig",
 	])?;
 
-	println!("Ok.");
+	println!("[INFO] lauching wasmer..");
+	execute_command(&["cmd.exe", "/C", "wasmer", "main.wasm"])?;
+
+	println!("[INFO] Ok.");
 	return Ok(());
 }
 
 /// JavaScript から呼び出し可能な wasm を出力します。
 fn build_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
-	println!("build wasm...");
+	println!("[INFO] build wasm...");
 
 	execute_command(&[
 		"zig",
@@ -61,7 +64,7 @@ fn build_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
 		"--export=test2",
 	])?;
 
-	println!("Ok.");
+	println!("[INFO] Ok.");
 	return Ok(());
 }
 
@@ -71,13 +74,13 @@ fn make_wasm() -> Result<(), Box<dyn std::error::Error>> {
 
 	execute_command(&["cmd.exe", "/C", "yarn", "node", "loading-test/launch.js"])?;
 
-	println!("Ok.");
+	println!("[INFO] Ok.");
 	return Ok(());
 }
 
 /// ファイルをコピーします。
 fn copy(left: &str, right: &str) -> Result<(), Box<dyn std::error::Error>> {
-	println!("COPY> [{}] >> [{}]", left, right);
+	println!("[INFO] COPY> [{}] >> [{}]", left, right);
 	std::fs::copy(left, right)?;
 	return Ok(());
 }
@@ -86,10 +89,10 @@ fn copy(left: &str, right: &str) -> Result<(), Box<dyn std::error::Error>> {
 fn make_install() -> Result<(), Box<dyn std::error::Error>> {
 	build_wasm_lib()?;
 
-	println!("mkdir...");
+	println!("[INFO] mkdir...");
 	mkdir("C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig")?;
 
-	println!("copy...");
+	println!("[INFO] copying...");
 	copy(
 		"main.wasm",
 		"C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig\\main.wasm",
@@ -107,34 +110,37 @@ fn make_install() -> Result<(), Box<dyn std::error::Error>> {
 		"C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig\\favicon.ico",
 	)?;
 
-	println!("Ok.");
+	println!("[INFO] Ok.");
 	return Ok(());
 }
 
 fn usage() {
 	println!("USAGE:");
-	println!("    make i ... make install");
-	println!("    make w ... make wasm binary");
+	println!("    make --help, -h ... make install");
+	println!("    make --install, -i ... make install");
+	println!("    make --wasm, -w ... make wasm binary");
 }
 
 /// エントリーポイントです。
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let args: Vec<String> = std::env::args().skip(1).collect();
-	if args.len() == 0 {
-		// wasmer によって呼び出し可能な main.wasm を出力します。
-		make_exe()?;
-	} else if args.len() == 1 && args[0] == "?" {
+	let arg = if 0 < args.len() { &args[0] } else { "" };
+	if arg == "--help" || arg == "-h" {
 		// 使用方法を出力します。
 		usage();
-	} else if args.len() == 1 && args[0] == "w" {
+	} else if arg == "-e" || arg == "--exe" {
+		// main.wasm を出力します。
+		make_exe()?;
+	} else if arg == "-w" || arg == "--wasm" {
 		// main.wasm を出力します。
 		make_wasm()?;
-	} else if args.len() == 1 && args[0] == "i" {
+	} else if arg == "-i" || arg == "--innstall" {
 		// main.wasm を出力して wwwroot 配下に配置します。
 		make_install()?;
 	} else {
 		// 使用方法を出力します。
 		usage();
 	}
+
 	return Ok(());
 }
