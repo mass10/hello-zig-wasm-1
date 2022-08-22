@@ -45,7 +45,7 @@ fn make_exe() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 /// JavaScript から呼び出し可能な wasm を出力します。
-fn make_wasm() -> Result<(), Box<dyn std::error::Error>> {
+fn build_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
 	println!("build wasm...");
 
 	execute_command(&[
@@ -65,6 +65,17 @@ fn make_wasm() -> Result<(), Box<dyn std::error::Error>> {
 	return Ok(());
 }
 
+/// JavaScript から呼び出し可能な wasm を出力します。
+fn make_wasm() -> Result<(), Box<dyn std::error::Error>> {
+	println!("build wasm...");
+	build_wasm_lib()?;
+
+	execute_command(&["cmd.exe", "/C", "yarn", "node", "launch.js"])?;
+
+	println!("Ok.");
+	return Ok(());
+}
+
 /// ファイルをコピーします。
 fn copy(left: &str, right: &str) -> Result<(), Box<dyn std::error::Error>> {
 	println!("COPY> [{}] >> [{}]", left, right);
@@ -74,7 +85,8 @@ fn copy(left: &str, right: &str) -> Result<(), Box<dyn std::error::Error>> {
 
 /// wasm を出力してインストールします。
 fn make_install() -> Result<(), Box<dyn std::error::Error>> {
-	make_wasm()?;
+	println!("build wasm...");
+	build_wasm_lib()?;
 
 	println!("mkdir...");
 	mkdir("C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig")?;
@@ -101,12 +113,21 @@ fn make_install() -> Result<(), Box<dyn std::error::Error>> {
 	return Ok(());
 }
 
+fn usage() {
+	println!("USAGE:");
+	println!("    make i ... make install");
+	println!("    make w ... make wasm binary");
+}
+
 /// エントリーポイントです。
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let args: Vec<String> = std::env::args().skip(1).collect();
 	if args.len() == 0 {
 		// wasmer によって呼び出し可能な main.wasm を出力します。
 		make_exe()?;
+	} else if args.len() == 1 && args[0] == "?" {
+		// 使用方法を出力します。
+		usage();
 	} else if args.len() == 1 && args[0] == "w" {
 		// main.wasm を出力します。
 		make_wasm()?;
@@ -114,7 +135,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 		// main.wasm を出力して wwwroot 配下に配置します。
 		make_install()?;
 	} else {
-		panic!("make w/i");
+		// 使用方法を出力します。
+		usage();
 	}
 	return Ok(());
 }
