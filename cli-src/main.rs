@@ -28,8 +28,7 @@ fn execute_command(command: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
 /// wasmer main.wasm
 /// ```
 fn make_wasm_exe() -> Result<(), Box<dyn std::error::Error>> {
-	println!("[INFO] build...");
-
+	println!("[INFO] build wasm...");
 	execute_command(&[
 		"zig",
 		"build-exe",
