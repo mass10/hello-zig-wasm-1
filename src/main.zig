@@ -14,7 +14,7 @@ const std = @import("std");
 /// WebAssembly を出力する場合、意味はありません。(消しても OK)
 pub fn main() anyerror!void {
     const stdout = std.io.getStdOut().writer();
-    try stdout.print("Hello, World!\n", .{});
+    try stdout.print("ハロー WASM!\n", .{});
 }
 
 /// 何らかの整数を返します。
