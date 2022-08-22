@@ -1,4 +1,5 @@
 @SETLOCAL
 @ECHO OFF
 
-zig build run
+@CALL cargo fmt
+@CALL cargo run -- %*
