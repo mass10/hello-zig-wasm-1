@@ -27,7 +27,7 @@ fn execute_command(command: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
 /// ```sh
 /// wasmer main.wasm
 /// ```
-fn make_exe() -> Result<(), Box<dyn std::error::Error>> {
+fn make_wasm_exe() -> Result<(), Box<dyn std::error::Error>> {
 	println!("[INFO] build...");
 
 	execute_command(&[
@@ -48,9 +48,9 @@ fn make_exe() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 /// JavaScript から呼び出し可能な wasm を出力します。
-fn build_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
+fn make_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
+	// JavaScript から呼び出し可能な wasm を出力します。
 	println!("[INFO] build wasm...");
-
 	execute_command(&[
 		"zig",
 		"build-lib",
@@ -64,14 +64,7 @@ fn build_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
 		"--export=test2",
 	])?;
 
-	println!("[INFO] Ok.");
-	return Ok(());
-}
-
-/// JavaScript から呼び出し可能な wasm を出力します。
-fn make_wasm() -> Result<(), Box<dyn std::error::Error>> {
-	build_wasm_lib()?;
-
+	println!("[INFO] test launching...");
 	execute_command(&["cmd.exe", "/C", "yarn", "node", "loading-test/launch.js"])?;
 
 	println!("[INFO] Ok.");
@@ -87,7 +80,20 @@ fn copy(left: &str, right: &str) -> Result<(), Box<dyn std::error::Error>> {
 
 /// wasm を出力してインストールします。
 fn make_install() -> Result<(), Box<dyn std::error::Error>> {
-	build_wasm_lib()?;
+	// JavaScript から呼び出し可能な wasm を出力します。
+	println!("[INFO] build wasm...");
+	execute_command(&[
+		"zig",
+		"build-lib",
+		"-O",
+		"ReleaseSmall",
+		"-target",
+		"wasm32-wasi",
+		"src/main.zig",
+		"-dynamic",
+		"--export=test1",
+		"--export=test2",
+	])?;
 
 	println!("[INFO] mkdir...");
 	mkdir("C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig")?;
@@ -116,9 +122,11 @@ fn make_install() -> Result<(), Box<dyn std::error::Error>> {
 
 fn usage() {
 	println!("USAGE:");
-	println!("    make --help, -h ... make install");
-	println!("    make --install, -i ... make install");
-	println!("    make --wasm, -w ... make wasm binary");
+	println!("    make --help,    -h      Shows usage.");
+	println!("    make --exe,     -e      Make executable wasm bin.");
+	println!("    make --lib,     -l      Make js-callable wasm lib.");
+	println!("    make --install, -i      Install contets locally.");
+	println!();
 }
 
 /// エントリーポイントです。
@@ -130,10 +138,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 		usage();
 	} else if arg == "-e" || arg == "--exe" {
 		// main.wasm を出力します。
-		make_exe()?;
-	} else if arg == "-w" || arg == "--wasm" {
+		make_wasm_exe()?;
+	} else if arg == "-l" || arg == "--lib" {
 		// main.wasm を出力します。
-		make_wasm()?;
+		make_wasm_lib()?;
 	} else if arg == "-i" || arg == "--innstall" {
 		// main.wasm を出力して wwwroot 配下に配置します。
 		make_install()?;
