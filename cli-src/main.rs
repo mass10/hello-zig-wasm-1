@@ -20,7 +20,13 @@ fn execute_command(command: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 /// wasmer によって実行可能な形式でビルドします。
+///
 /// これは手元で出力を確認するだけの目的で使用されます。
+/// 出力された wasm の main() を呼び出すには、次のように実行します。
+/// 
+/// ```sh
+/// wasmer main.wasm
+/// ```
 fn make_exe() -> Result<(), Box<dyn std::error::Error>> {
 	println!("build...");
 
