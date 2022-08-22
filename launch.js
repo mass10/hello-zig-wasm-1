@@ -23,7 +23,7 @@ function launchWebAssembly() {
 			},
 		}).exports;
 		console.log(lib.test1());
-		console.log(lib.test2(128, 128));
+		console.log(lib.test2(100, 1000));
 	})
 	.catch((e) => {
 			console.error(e);
