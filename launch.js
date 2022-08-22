@@ -9,33 +9,32 @@ const fs = require("fs");
 /**
  * WebAssembly をファイルシステムからロードします。
  */
-function launchWebAssembly() {
+async function launchWebAssembly() {
+	// ファイルシステムから wasm をロードします。
 	const content = fs.readFileSync("main.wasm");
-	console.log("[DEBUG] module is", content);
-	WebAssembly.compile(content)
-	.then((module) => {
-		const lib = new WebAssembly.Instance(module, {
-			env: {
-				memoryBase: 0,
-				tableBase: 0,
-				memory: new WebAssembly.Memory({ initial: 256 }),
-				table: new WebAssembly.Table({ initial: 0, element: "anyfunc" }),
-			},
-		}).exports;
-		console.log(lib.test1());
-		console.log(lib.test2(100, 1000));
-	})
-	.catch((e) => {
-			console.error(e);
-	});
+
+	const module = await WebAssembly.compile(content)
+
+	const mywasm = new WebAssembly.Instance(module, {
+		env: {
+			memoryBase: 0,
+			tableBase: 0,
+			memory: new WebAssembly.Memory({ initial: 256 }),
+			table: new WebAssembly.Table({ initial: 0, element: "anyfunc" }),
+		},
+	}).exports;
+
+	// wasm で export されている操作を呼び出します。
+	console.log(mywasm.test1());
+	console.log(mywasm.test2(100, 1000));
 }
 
 /**
  * エントリーポイント
  */
-function main() {
+async function main() {
 
-	launchWebAssembly();
+	await launchWebAssembly();
 }
 
 main();
