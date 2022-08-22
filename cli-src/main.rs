@@ -23,7 +23,7 @@ fn execute_command(command: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// これは手元で出力を確認するだけの目的で使用されます。
 /// 出力された wasm の main() を呼び出すには、次のように実行します。
-/// 
+///
 /// ```sh
 /// wasmer main.wasm
 /// ```
