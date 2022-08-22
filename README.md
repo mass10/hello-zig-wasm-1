@@ -41,3 +41,8 @@ COPY /Y launch.js C:\Inetpub\wwwroot\20220821-my-wasm-by-zig\
 COPY /Y index.html C:\Inetpub\wwwroot\20220821-my-wasm-by-zig\
 START http://localhost/20220821-my-wasm-by-zig/
 ```
+
+# 参考
+* wasm で DOM 操作 https://github.com/shritesh/zig-wasm-dom/blob/gh-pages/zigdom.zig
+* 簡単な wasm サンプル https://fukuno.jig.jp/2927
+* zig + wasm https://note.com/shift_tech/n/n58cbf573baef
