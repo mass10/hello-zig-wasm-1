@@ -31,7 +31,7 @@ zig build-lib -O ReleaseSmall -target wasm32-wasi -dynamic --export=test1 --expo
 wasmer.exe main.wasm
 ```
 
-# Publish
+# IIS 配下に設置して、ウェブページ上で動かしてみる
 
 ```CMD
 DIR C:\Inetpub\wwwroot\
