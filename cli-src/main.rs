@@ -67,10 +67,9 @@ fn build_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
 
 /// JavaScript から呼び出し可能な wasm を出力します。
 fn make_wasm() -> Result<(), Box<dyn std::error::Error>> {
-	println!("build wasm...");
 	build_wasm_lib()?;
 
-	execute_command(&["cmd.exe", "/C", "yarn", "node", "launch.js"])?;
+	execute_command(&["cmd.exe", "/C", "yarn", "node", "loading-test/launch.js"])?;
 
 	println!("Ok.");
 	return Ok(());
@@ -85,7 +84,6 @@ fn copy(left: &str, right: &str) -> Result<(), Box<dyn std::error::Error>> {
 
 /// wasm を出力してインストールします。
 fn make_install() -> Result<(), Box<dyn std::error::Error>> {
-	println!("build wasm...");
 	build_wasm_lib()?;
 
 	println!("mkdir...");
