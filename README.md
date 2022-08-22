@@ -1,3 +1,11 @@
+# 始める前に: rustup をインストールする
+
+https://www.rust-lang.org/ja/tools/install
+
+# 始める前に: Zig をインストールする
+
+https://ziglang.org/download/
+
 # 始める前に: wasmer をインストールする
 
 ```CMD
