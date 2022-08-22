@@ -65,7 +65,7 @@ fn make_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
 	])?;
 
 	println!("[INFO] test launching...");
-	execute_command(&["cmd.exe", "/C", "yarn", "node", "loading-test/launch.js"])?;
+	execute_command(&["cmd.exe", "/C", "node", "loading-test/launch.js"])?;
 
 	println!("[INFO] Ok.");
 	return Ok(());
