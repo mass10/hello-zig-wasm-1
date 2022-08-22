@@ -43,6 +43,7 @@ START http://localhost/20220821-my-wasm-by-zig/
 ```
 
 # 参考
-* wasm で DOM 操作 https://github.com/shritesh/zig-wasm-dom/blob/gh-pages/zigdom.zig
+* wasm で DOM 操作 https://zenn.dev/igrep/articles/2021-11-wasm-reference-types
+* wasm で DOM 操作(具体例) https://github.com/shritesh/zig-wasm-dom/blob/gh-pages/zigdom.zig
 * 簡単な wasm サンプル https://fukuno.jig.jp/2927
 * zig + wasm https://note.com/shift_tech/n/n58cbf573baef
