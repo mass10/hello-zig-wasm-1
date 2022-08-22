@@ -1,3 +1,10 @@
+//!
+//! ビルドツール
+//!
+//! 実行は make で
+//!
+
+/// ディレクトリーを作成します。
 fn mkdir(path: &str) -> Result<(), Box<dyn std::error::Error>> {
 	let pt = std::path::Path::new(path);
 	if pt.is_dir() {
@@ -8,6 +15,7 @@ fn mkdir(path: &str) -> Result<(), Box<dyn std::error::Error>> {
 	return Ok(());
 }
 
+/// コマンドを実行します。
 fn execute_command(command: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
 	let (program, args) = command.split_first().unwrap();
 	let status = std::process::Command::new(program).args(args).spawn()?.wait()?;
@@ -119,6 +127,7 @@ fn make_install() -> Result<(), Box<dyn std::error::Error>> {
 	return Ok(());
 }
 
+/// 使用方法を出力します。
 fn usage() {
 	println!("USAGE:");
 	println!("    make --help,    -h      Shows usage.");
@@ -128,7 +137,7 @@ fn usage() {
 	println!();
 }
 
-/// エントリーポイントです。
+/// Rust アプリケーションのエントリーポイントです。
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let args: Vec<String> = std::env::args().skip(1).collect();
 	let arg = if 0 < args.len() { &args[0] } else { "" };
