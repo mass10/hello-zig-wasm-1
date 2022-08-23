@@ -69,6 +69,7 @@ fn make_wasm_lib() -> Result<(), Box<dyn std::error::Error>> {
 		"-dynamic",
 		"--export=test1",
 		"--export=test2",
+		"--export=context",
 	])?;
 
 	println!("[INFO] test launching...");
@@ -100,6 +101,7 @@ fn make_install() -> Result<(), Box<dyn std::error::Error>> {
 		"-dynamic",
 		"--export=test1",
 		"--export=test2",
+		"--export=context",
 	])?;
 
 	println!("[INFO] mkdir...");
@@ -111,17 +113,18 @@ fn make_install() -> Result<(), Box<dyn std::error::Error>> {
 		"C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig\\main.wasm",
 	)?;
 	copy(
-		"WWW\\launch.js",
-		"C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig\\launch.js",
-	)?;
-	copy(
 		"WWW\\index.html",
 		"C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig\\index.html",
 	)?;
-	copy(
-		"WWW\\favicon.ico",
-		"C:\\Inetpub\\wwwroot\\20220821-my-wasm-by-zig\\favicon.ico",
-	)?;
+	copy("WWW\\favicon.ico", "C:\\Inetpub\\wwwroot\\favicon.ico")?;
+
+	// ブラウザーを開く
+	execute_command(&[
+		"cmd.exe",
+		"/C",
+		"START",
+		"http://localhost/20220821-my-wasm-by-zig",
+	])?;
 
 	println!("[INFO] Ok.");
 	return Ok(());
@@ -150,7 +153,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 	} else if arg == "-l" || arg == "--lib" {
 		// main.wasm を出力します。
 		make_wasm_lib()?;
-	} else if arg == "-i" || arg == "--innstall" {
+	} else if arg == "-i" || arg == "--install" {
 		// main.wasm を出力して wwwroot 配下に配置します。
 		make_install()?;
 	} else {
