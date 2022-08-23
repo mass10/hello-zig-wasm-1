@@ -7,6 +7,9 @@
 //! https://note.com/shift_tech/n/n58cbf573baef
 //!
 
+// DOM 操作をやっている人がいるようだ
+// extern "document" fn query_selector(selector_ptr: [*]const u8, selector_len: usize) usize;
+
 const std = @import("std");
 
 /// コンフィギュレーション構造体
@@ -15,7 +18,7 @@ const GlobalCotext = struct {
     field1: []const u8 = "",
 
     /// 整数
-    field2: u32 = 123,
+    field2: i32 = 123,
 };
 
 /// mutable
@@ -27,20 +30,31 @@ var _ctx = GlobalCotext{};
 pub fn main() anyerror!void {
     const stdout = std.io.getStdOut().writer();
     try stdout.print("ハロー WASM!\n", .{});
-    try stdout.print("u32: [{}]\n", .{_ctx.field2});
+    try stdout.print("i32: [{}]\n", .{_ctx.field2});
     _ctx.field2 = _ctx.field2 + 1;
-    try stdout.print("u32: [{}]\n", .{_ctx.field2});
+    try stdout.print("i32: [{}]\n", .{_ctx.field2});
 }
 
 /// 何らかの整数を返します。
 export fn test1() i32 {
-    return 1;
+    _ctx.field2 += 1;
+    return _ctx.field2;
 }
 
 /// `left` と `right` を足した数を返します。
 export fn test2(left: i32, right: i32) i32 {
     return left + right;
 }
+
+// export fn test3(unknown: RefType) []const u8 {
+//     return "";
+// }
+
+// export fn test4(name: []const u8) {
+//     const body_selector = "body";
+//     const body_node = query_selector(body_selector, body_selector.len);
+//     defer release_object(body_node);
+// }
 
 /// コンテキストオブジェクトを公開できるか？(できてない)
 export fn context() *GlobalCotext {
