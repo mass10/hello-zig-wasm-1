@@ -27,6 +27,7 @@ async function launchWebAssembly() {
 	// wasm で export されている操作を呼び出します。
 	console.log(mywasm.test1());
 	console.log(mywasm.test2(100, 1000));
+	console.log(mywasm.context().field2);
 }
 
 /**
