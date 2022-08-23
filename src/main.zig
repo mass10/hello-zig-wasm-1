@@ -33,12 +33,12 @@ pub fn main() anyerror!void {
 }
 
 /// 何らかの整数を返します。
-export fn test1() usize {
+export fn test1() i32 {
     return 1;
 }
 
 /// `left` と `right` を足した数を返します。
-export fn test2(left: usize, right: usize) usize {
+export fn test2(left: i32, right: i32) i32 {
     return left + right;
 }
 
